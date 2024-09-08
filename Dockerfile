@@ -4,7 +4,7 @@ RUN \
     echo "http://dl-8.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-8.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 
-# Install basic dependencies
+# Install  basic dependencies
 RUN \
     apk --no-cache add -q git cloc openssl openssl-dev openssh alpine-sdk bash gettext sudo build-base gnupg linux-headers xz
 
