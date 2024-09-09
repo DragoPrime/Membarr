@@ -23,21 +23,21 @@ def check_table_version(conn, tablename):
     for app_version in table_history:
         if table_history[app_version] == table_format:
             return app_version
-    raise ValueError("Could not identify database table version.")
+    raise ValueError("Nu s-a putut identifica versiunea tabelului bazei de date.")
 
 def update_table(conn, tablename):
     version = check_table_version(conn, tablename)
     print('------')
     print(f'DB table version: {version}')
     if version == CURRENT_VERSION:
-        print('DB table up to date!')
+        print('Tabel DB actualizat!')
         print('------')
         return
 
     # Table NOT up to date.
     # Update to Membarr V1.1 table
     if version == 'Invitarr V1.0':
-        print("Upgrading DB table from Invitarr v1.0 to Membarr V1.1")
+        print("Actualizarea tabelului DB de la Invitarr v1.0 la Membarr V1.1")
         # Create temp table
         conn.execute(
         '''CREATE TABLE "membarr_temp_upgrade_table" (
