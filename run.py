@@ -17,33 +17,33 @@ from plexapi.myplex import MyPlexAccount
 maxroles = 10
 
 if switch == 0:
-    print("Missing Config.")
+    print("Config lipsă.")
     sys.exit()
 
 
 class Bot(commands.Bot):
     def __init__(self) -> None:
-        print("Initializing Discord bot")
+        print("Se inițializează botul Discord")
         intents = discord.Intents.all()
         intents.members = True
         intents.message_content = True
         super().__init__(command_prefix=".", intents=intents)
 
     async def on_ready(self):
-        print("Bot is online.")
+        print("Botul este online.")
         for guild in self.guilds:
-            print("Syncing commands to " + guild.name)
+            print("Sincronizarea comenzilor cu " + guild.name)
             self.tree.copy_global_to(guild=guild)
             await self.tree.sync(guild=guild)
 
     async def on_guild_join(self, guild):
-        print(f"Joined guild {guild.name}")
-        print(f"Syncing commands to {guild.name}")
+        print(f"S-a alăturat breaslei {guild.name}")
+        print(f"Sincronizarea comenzilor cu {guild.name}")
         self.tree.copy_global_to(guild=guild)
         await self.tree.sync(guild=guild)
 
     async def setup_hook(self):
-        print("Loading media server connectors")
+        print("Se încarcă conectorii serverului media")
         await self.load_extension(f'app.bot.cogs.app')
 
 
@@ -56,7 +56,7 @@ async def reload():
 
 async def getuser(interaction, server, type):
     value = None
-    await interaction.user.send("Please reply with your {} {}:".format(server, type))
+    await interaction.user.send("Vă rugăm să răspundeți cu {} {}:".format(server, type))
     while (value == None):
         def check(m):
             return m.author == interaction.user and not m.guild
@@ -65,53 +65,53 @@ async def getuser(interaction, server, type):
             value = await bot.wait_for('message', timeout=200, check=check)
             return value.content
         except asyncio.TimeoutError:
-            message = "Timed Out. Try again."
+            message = "Timp expirat. Încearcă din nou."
             return None
 
 
-plex_commands = app_commands.Group(name="plexsettings", description="Membarr Plex commands")
-jellyfin_commands = app_commands.Group(name="jellyfinsettings", description="Membarr Jellyfin commands")
+plex_commands = app_commands.Group(name="plexsettings", description="Comenzi Membarr Plex")
+jellyfin_commands = app_commands.Group(name="jellyfinsettings", description="Comenzi Membarr Jellyfin")
 
 
-@plex_commands.command(name="addrole", description="Add a role to automatically add users to Plex")
+@plex_commands.command(name="addrole", description="Adăugați un rol pentru a adăuga automat utilizatori la Plex")
 @app_commands.checks.has_permissions(administrator=True)
 async def plexroleadd(interaction: discord.Interaction, role: discord.Role):
     if len(plex_roles) <= maxroles:
         # Do not add roles multiple times.
         if role.name in plex_roles:
-            await embederror(interaction.response, f"Plex role \"{role.name}\" already added.")
+            await embederror(interaction.response, f"Rolul Plex \"{role.name}\" deja adăugat.")
             return
 
         plex_roles.append(role.name)
         saveroles = ",".join(plex_roles)
         confighelper.change_config("plex_roles", saveroles)
-        await interaction.response.send_message("Updated Plex roles. Bot is restarting. Please wait.", ephemeral=True)
-        print("Plex roles updated. Restarting bot, Give it a few seconds.")
+        await interaction.response.send_message("Roluri Plex actualizate. Botul se repornește. Va rugam asteptati.", ephemeral=True)
+        print("Rolurile Plex au fost actualizate. Se repornește bot, dă-i câteva secunde.")
         await reload()
-        print("Bot has been restarted. Give it a few seconds.")
+        print("Botul a fost repornit. Dă-i câteva secunde.")
 
 
-@plex_commands.command(name="removerole", description="Stop adding users with a role to Plex")
+@plex_commands.command(name="removerole", description="Nu mai adăugați utilizatori cu un rol la Plex")
 @app_commands.checks.has_permissions(administrator=True)
 async def plexroleremove(interaction: discord.Interaction, role: discord.Role):
     if role.name not in plex_roles:
-        await embederror(interaction.response, f"\"{role.name}\" is currently not a Plex role.")
+        await embederror(interaction.response, f"\"{role.name}\" în prezent nu este un rol Plex.")
         return
     plex_roles.remove(role.name)
     confighelper.change_config("plex_roles", ",".join(plex_roles))
-    await interaction.response.send_message(f"Membarr will stop auto-adding \"{role.name}\" to Plex", ephemeral=True)
+    await interaction.response.send_message(f"Membarr va opri adăugarea automată \"{role.name}\" la Plex", ephemeral=True)
 
 
-@plex_commands.command(name="listroles", description="List all roles whose members will be automatically added to Plex")
+@plex_commands.command(name="listroles", description="Listați toate rolurile ai căror membri vor fi adăugați automat la Plex")
 @app_commands.checks.has_permissions(administrator=True)
 async def plexrolels(interaction: discord.Interaction):
     await interaction.response.send_message(
-        "The following roles are being automatically added to Plex:\n" +
+        "Următoarele roluri sunt adăugate automat la Plex:\n" +
         ", ".join(plex_roles), ephemeral=True
     )
 
 
-@plex_commands.command(name="setup", description="Setup Plex integration")
+@plex_commands.command(name="setup", description="Configurați integrarea Plex")
 @app_commands.checks.has_permissions(administrator=True)
 async def setupplex(interaction: discord.Interaction, username: str, password: str, server_name: str,
                     base_url: str = "", save_token: bool = True):
@@ -121,10 +121,10 @@ async def setupplex(interaction: discord.Interaction, username: str, password: s
         plex = account.resource(server_name).connect()
     except Exception as e:
         if str(e).startswith("(429)"):
-            await embederror(interaction.followup, "Too many requests. Please try again later.")
+            await embederror(interaction.followup, "Prea multe cereri. Vă rugăm să încercați din nou mai târziu.")
             return
 
-        await embederror(interaction.followup, "Could not connect to Plex server. Please check your credentials.")
+        await embederror(interaction.followup, "Nu s-a putut conecta la serverul Plex. Vă rugăm să vă verificați acreditările.")
         return
 
     if (save_token):
@@ -146,58 +146,58 @@ async def setupplex(interaction: discord.Interaction, username: str, password: s
         confighelper.change_config("plex_base_url", "")
         confighelper.change_config("plex_token", "")
 
-    print("Plex authentication details updated. Restarting bot.")
+    print("Detaliile de autentificare Plex au fost actualizate. Se repornește bot.")
     await interaction.followup.send(
-        "Plex authentication details updated. Restarting bot. Please wait.\n" +
-        "Please check logs and make sure you see the line: `Logged into plex`. If not run this command again and make sure you enter the right values.",
+        "Detaliile de autentificare Plex au fost actualizate. Se repornește bot. Va rugam asteptati.\n" +
+        "Vă rugăm să verificați jurnalele și să vă asigurați că vedeți linia: `Autentificat in plex`. Dacă nu rulați această comandă din nou și asigurați-vă că introduceți valorile corecte.",
         ephemeral=True
     )
     await reload()
-    print("Bot has been restarted. Give it a few seconds.")
+    print("Botul a fost repornit. Dă-i câteva secunde.")
 
 
-@jellyfin_commands.command(name="addrole", description="Add a role to automatically add users to Jellyfin")
+@jellyfin_commands.command(name="addrole", description="Adăugați un rol pentru a adăuga automat utilizatori la Jellyfin")
 @app_commands.checks.has_permissions(administrator=True)
 async def jellyroleadd(interaction: discord.Interaction, role: discord.Role):
     if len(jellyfin_roles) <= maxroles:
         # Do not add roles multiple times.
         if role.name in jellyfin_roles:
-            await embederror(interaction.response, f"Jellyfin role \"{role.name}\" already added.")
+            await embederror(interaction.response, f"Rolul Jellyfin \"{role.name}\" deja adăugat.")
             return
 
         jellyfin_roles.append(role.name)
         saveroles = ",".join(jellyfin_roles)
         confighelper.change_config("jellyfin_roles", saveroles)
-        await interaction.response.send_message("Updated Jellyfin roles. Bot is restarting. Please wait a few seconds.",
+        await interaction.response.send_message("Roluri Jellyfin actualizate. Botul se repornește. Vă rugăm să așteptați câteva secunde.",
                                                 ephemeral=True)
-        print("Jellyfin roles updated. Restarting bot.")
+        print("Roluri Jellyfin actualizate. Se repornește bot.")
         await reload()
-        print("Bot has been restarted. Give it a few seconds.")
+        print("Botul a fost repornit. Dă-i câteva secunde.")
 
 
-@jellyfin_commands.command(name="removerole", description="Stop adding users with a role to Jellyfin")
+@jellyfin_commands.command(name="removerole", description="Nu mai adăugați utilizatori cu un rol la Jellyfin")
 @app_commands.checks.has_permissions(administrator=True)
 async def jellyroleremove(interaction: discord.Interaction, role: discord.Role):
     if role.name not in jellyfin_roles:
-        await embederror(interaction.response, f"\"{role.name}\" is currently not a Jellyfin role.")
+        await embederror(interaction.response, f"\"{role.name}\" în prezent nu este un rol Jellyfin.")
         return
     jellyfin_roles.remove(role.name)
     confighelper.change_config("jellyfin_roles", ",".join(jellyfin_roles))
-    await interaction.response.send_message(f"Membarr will stop auto-adding \"{role.name}\" to Jellyfin",
+    await interaction.response.send_message(f"Membarr va opri adăugarea automată \"{role.name}\" la Jellyfin",
                                             ephemeral=True)
 
 
 @jellyfin_commands.command(name="listroles",
-                           description="List all roles whose members will be automatically added to Jellyfin")
+                           description="Listați toate rolurile ai căror membri vor fi adăugați automat la Jellyfin")
 @app_commands.checks.has_permissions(administrator=True)
 async def jellyrolels(interaction: discord.Interaction):
     await interaction.response.send_message(
-        "The following roles are being automatically added to Jellyfin:\n" +
+        "Următoarele roluri sunt adăugate automat la Jellyfin:\n" +
         ", ".join(jellyfin_roles), ephemeral=True
     )
 
 
-@jellyfin_commands.command(name="setup", description="Setup Jellyfin integration")
+@jellyfin_commands.command(name="setup", description="Configurați integrarea Jellyfin")
 @app_commands.checks.has_permissions(administrator=True)
 async def setupjelly(interaction: discord.Interaction, server_url: str, api_key: str, external_url: str = None):
     await interaction.response.defer()
@@ -210,28 +210,28 @@ async def setupjelly(interaction: discord.Interaction, server_url: str, api_key:
             pass
         elif server_status == 401:
             # Unauthorized
-            await embederror(interaction.followup, "API key provided is invalid")
+            await embederror(interaction.followup, "Cheia API furnizată este nevalidă")
             return
         elif server_status == 403:
             # Forbidden
-            await embederror(interaction.followup, "API key provided does not have permissions")
+            await embederror(interaction.followup, "Cheia API furnizată nu are permisiuni")
             return
         elif server_status == 404:
             # page not found
-            await embederror(interaction.followup, "Server endpoint provided was not found")
+            await embederror(interaction.followup, "Punctul final al serverului furnizat nu a fost găsit")
             return
         else:
             await embederror(interaction.followup,
-                             "Unknown error occurred while connecting to Jellyfin. Check Membarr logs.")
+                             "A apărut o eroare necunoscută la conectarea la Jellyfin. Verificați jurnalele Membarr.")
     except ConnectTimeout as e:
         await embederror(interaction.followup,
-                         "Connection to server timed out. Check that Jellyfin is online and reachable.")
+                         "Conexiunea la server a expirat. Verificați dacă Jellyfin este online și accesibil.")
         return
     except Exception as e:
-        print("Exception while testing Jellyfin connection")
+        print("Excepție la testarea conexiunii Jellyfin")
         print(type(e).__name__)
         print(e)
-        await embederror(interaction.followup, "Unknown exception while connecting to Jellyfin. Check Membarr logs")
+        await embederror(interaction.followup, "Excepție necunoscută în timpul conectării la Jellyfin. Verificați jurnalele Membarr")
         return
 
     confighelper.change_config("jellyfin_server_url", str(server_url))
@@ -240,10 +240,10 @@ async def setupjelly(interaction: discord.Interaction, server_url: str, api_key:
         confighelper.change_config("jellyfin_external_url", str(external_url))
     else:
         confighelper.change_config("jellyfin_external_url", "")
-    print("Jellyfin server URL and API key updated. Restarting bot.")
-    await interaction.followup.send("Jellyfin server URL and API key updated. Restarting bot.", ephemeral=True)
+    print("Adresa URL a serverului Jellyfin și cheia API au fost actualizate. Se repornește bot.")
+    await interaction.followup.send("Adresa URL a serverului Jellyfin și cheia API au fost actualizate. Se repornește bot.", ephemeral=True)
     await reload()
-    print("Bot has been restarted. Give it a few seconds.")
+    print("Botul a fost repornit. Dă-i câteva secunde.")
 
 
 @plex_commands.command(name="setuplibs", description="Setup libraries that new users can access")
