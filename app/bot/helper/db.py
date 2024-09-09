@@ -10,9 +10,9 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        print("Connected to db")
+        print("Conectat la db")
     except Error as e:
-        print("error in connecting to db")
+        print("eroare la conectarea la db")
     finally:
         if conn:
             return conn
@@ -30,7 +30,7 @@ conn = create_connection(DB_URL)
 
 # Checking if table exists
 if checkTableExists(conn, DB_TABLE):
-	print('Table exists.')
+	print('Tabelul există.')
 else:
     conn.execute(
     '''CREATE TABLE "clients" (
@@ -50,17 +50,17 @@ def save_user_email(username, email):
             VALUES('{username}', '{email}')
         """)
         conn.commit()
-        print("User added to db.")
+        print("Utilizator adăugat la db.")
     else:
-        return "Username and email cannot be empty"
+        return "Numele de utilizator și adresa de e-mail nu pot fi goale"
 
 def save_user(username):
     if username:
         conn.execute("INSERT INTO clients (discord_username) VALUES ('"+ username +"')")
         conn.commit()
-        print("User added to db.")
+        print("Utilizator adăugat la db.")
     else:
-        return "Username cannot be empty"
+        return "Numele de utilizator nu poate fi gol"
     
 def save_user_jellyfin(username, jellyfin_username):
     if username and jellyfin_username:
@@ -69,9 +69,9 @@ def save_user_jellyfin(username, jellyfin_username):
             VALUES('{username}', '{jellyfin_username}')
         """)
         conn.commit()
-        print("User added to db.")
+        print("Utilizator adăugat la db.")
     else:
-        return "Discord and Jellyfin usernames cannot be empty"
+        return "Numele de utilizator Discord și Jellyfin nu pot fi goale"
 
 def save_user_all(username, email, jellyfin_username):
     if username and email and jellyfin_username:
@@ -80,7 +80,7 @@ def save_user_all(username, email, jellyfin_username):
             VALUES('{username}', '{email}', '{jellyfin_username}')
         """)
         conn.commit()
-        print("User added to db.")
+        print("Utilizator adăugat la db.")
     elif username and email:
         save_user_email(username, email)
     elif username and jellyfin_username:
@@ -88,7 +88,7 @@ def save_user_all(username, email, jellyfin_username):
     elif username:
         save_user(username)
     else:
-        return "Discord username must all be provided"
+        return "Numele de utilizator Discord trebuie furnizat"
 
 def get_useremail(username):
     if username:
@@ -99,11 +99,11 @@ def get_useremail(username):
             if email:
                 return email
             else:
-                return "No email found"
+                return "Nu a fost găsit niciun e-mail"
         except:
-            return "error in fetching from db"
+            return "eroare la preluarea de la db"
     else:
-        return "username cannot be empty"
+        return "numele de utilizator nu poate fi gol"
 
 def get_jellyfin_username(username):
     """
@@ -121,11 +121,11 @@ def get_jellyfin_username(username):
             if jellyfin_username:
                 return jellyfin_username
             else:
-                return "No users found"
+                return "Nu s-au găsit utilizatori"
         except:
-            return "error in fetching from db"
+            return "eroare la preluarea de la db"
     else:
-        return "username cannot be empty"
+        return "numele de utilizator nu poate fi gol"
 
 def remove_email(username):
     """
@@ -134,10 +134,10 @@ def remove_email(username):
     if username:
         conn.execute(f"UPDATE clients SET email = null WHERE discord_username = '{username}'")
         conn.commit()
-        print(f"Email removed from user {username} in database")
+        print(f"E-mail eliminat de la utilizatorul {username} în baza de date")
         return True
     else:
-        print(f"Username cannot be empty.")
+        print(f"Numele de utilizator nu poate fi gol.")
         return False
 
 def remove_jellyfin(username):
@@ -147,10 +147,10 @@ def remove_jellyfin(username):
     if username:
         conn.execute(f"UPDATE clients SET jellyfin_username = null WHERE discord_username = '{username}'")
         conn.commit()
-        print(f"Jellyfin username removed from user {username} in database")
+        print(f"Numele de utilizator Jellyfin a fost eliminat de la utilizatorul {username} în baza de date")
         return True
     else:
-        print(f"Username cannot be empty.")
+        print(f"Numele de utilizator nu poate fi gol.")
         return False
 
 
@@ -163,7 +163,7 @@ def delete_user(username):
         except:
             return False
     else:
-        return "username cannot be empty"
+        return "numele de utilizator nu poate fi gol"
 
 def read_all():
     cur = conn.cursor()
