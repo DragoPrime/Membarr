@@ -1,6 +1,6 @@
 import discord
 
-# these were copied from the app object. They could be made static instead but I'm lazy.
+# these were copied from the  app object. They could be made static instead but I'm lazy.
 async def embederror(recipient, message, ephemeral=True):
     embed = discord.Embed(title="ERROR",description=message, color=0xf50000)
     await send_embed(recipient, embed, ephemeral)
