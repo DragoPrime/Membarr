@@ -8,7 +8,7 @@ def plexadd(plex, plexname, Plex_LIBS):
         plex.myPlexAccount().inviteFriend(user=plexname, server=plex, sections=Plex_LIBS, allowSync=False,
                                               allowCameraUpload=False, allowChannels=False, filterMovies=None,
                                               filterTelevision=None, filterMusic=None)
-        print(plexname +' has been added to plex')
+        print(plexname +' a fost adăugat la plex')
         return True
     except Exception as e:
         print(e)
@@ -18,7 +18,7 @@ def plexadd(plex, plexname, Plex_LIBS):
 def plexremove(plex, plexname):
     try:
         plex.myPlexAccount().removeFriend(user=plexname)
-        print(plexname +' has been removed from plex')
+        print(plexname +' a fost eliminat din plex')
         return True
     except Exception as e:
         print(e)
