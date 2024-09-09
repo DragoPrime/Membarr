@@ -16,7 +16,7 @@ def add_user(jellyfin_url, jellyfin_api_key, username, password, jellyfin_libs):
         userId = response.json()["Id"]
 
         if response.status_code != 200:
-            print(f"Error creating new Jellyfin user: {response.text}")
+            print(f"Eroare la crearea unui nou utilizator Jellyfin: {response.text}")
             return False
         
         # Grant access to User
@@ -35,7 +35,7 @@ def add_user(jellyfin_url, jellyfin_api_key, username, password, jellyfin_libs):
                         enabled_folders.append(server_lib['ItemId'])
                         found = True
                 if not found:
-                    print(f"Couldn't find Jellyfin Library: {lib}")
+                    print(f"Biblioteca Jellyfin nu a putut fi găsită: {lib}")
 
         payload = {
             "IsAdministrator": False,
@@ -84,7 +84,7 @@ def add_user(jellyfin_url, jellyfin_api_key, username, password, jellyfin_libs):
         if response.status_code == 200 or response.status_code == 204:
             return True
         else:
-            print(f"Error setting user permissions: {response.text}")
+            print(f"Eroare la setarea permisiunilor utilizatorului: {response.text}")
 
     except Exception as e:
         print(e)
@@ -119,7 +119,7 @@ def remove_user(jellyfin_url, jellyfin_api_key, jellyfin_username):
         
         if userId is None:
             # User not found
-            print(f"Error removing user {jellyfin_username} from Jellyfin: Could not find user.")
+            print(f"Eroare la eliminarea utilizatorului {jellyfin_username} de la Jellyfin: Nu am putut găsi utilizatorul.")
             return False
         
         # Delete User
@@ -131,7 +131,7 @@ def remove_user(jellyfin_url, jellyfin_api_key, jellyfin_username):
         if response.status_code == 204 or response.status_code == 200:
             return True
         else:
-            print(f"Error deleting Jellyfin user: {response.text}")
+            print(f"Eroare la ștergerea utilizatorului Jellyfin: {response.text}")
     except Exception as e:
         print(e)
         return False
@@ -147,7 +147,7 @@ def get_users(jellyfin_url, jellyfin_api_key):
 def generate_password(length, lower=True, upper=True, numbers=True, symbols=True):
     character_list = []
     if not (lower or upper or numbers or symbols):
-        raise ValueError("At least one character type must be provided")
+        raise ValueError("Trebuie furnizat cel puțin un tip de caracter")
         
     if lower:
         character_list += string.ascii_lowercase
