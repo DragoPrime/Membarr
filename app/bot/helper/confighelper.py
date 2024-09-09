@@ -64,7 +64,7 @@ try:
     PLEX_TOKEN = config.get(BOT_SECTION, 'plex_token')
     PLEX_BASE_URL = config.get(BOT_SECTION, 'plex_base_url')
 except:
-    print("No Plex auth token details found")
+    print("Nu s-au găsit detalii despre tokenul de autentificare Plex")
     plex_token_configured = False
 
 # Get Plex config
@@ -73,16 +73,16 @@ try:
     PLEXUSER = config.get(BOT_SECTION, 'plex_user')
     PLEXPASS = config.get(BOT_SECTION, 'plex_pass')
 except:
-    print("No Plex login info found")
+    print("Nu s-au găsit informații de conectare Plex")
     if not plex_token_configured:
-        print("Could not load plex config")
+        print("Nu s-a putut încărca configurația plex")
         plex_configured = False
 
 # Get Plex roles config
 try:
     plex_roles = config.get(BOT_SECTION, 'plex_roles')
 except:
-    print("Could not get Plex roles config")
+    print("Nu s-a putut obține configurația rolurilor Plex")
     plex_roles = None
 if plex_roles:
     plex_roles = list(plex_roles.split(','))
@@ -93,7 +93,7 @@ else:
 try:
     Plex_LIBS = config.get(BOT_SECTION, 'plex_libs')
 except:
-    print("Could not get Plex libs config. Defaulting to all libraries.")
+    print("Nu s-a putut obține configurația bibliotecii Plex. Implicit pentru toate bibliotecile.")
     Plex_LIBS = None
 if Plex_LIBS is None:
     Plex_LIBS = ["all"]
@@ -105,7 +105,7 @@ try:
     JELLYFIN_SERVER_URL = config.get(BOT_SECTION, 'jellyfin_server_url')
     JELLYFIN_API_KEY = config.get(BOT_SECTION, "jellyfin_api_key")
 except:
-    print("Could not load Jellyfin config")
+    print("Nu s-a putut încărca configurația Jellyfin")
     jellyfin_configured = False
 
 try:
@@ -114,13 +114,13 @@ try:
         JELLYFIN_EXTERNAL_URL = JELLYFIN_SERVER_URL
 except:
     JELLYFIN_EXTERNAL_URL = JELLYFIN_SERVER_URL
-    print("Could not get Jellyfin external url. Defaulting to server url.")
+    print("Nu s-a putut obține adresa URL externă Jellyfin. Implicit la adresa URL a serverului.")
 
 # Get Jellyfin roles config
 try:
     jellyfin_roles = config.get(BOT_SECTION, 'jellyfin_roles')
 except:
-    print("Could not get Jellyfin roles config")
+    print("Nu s-a putut obține configurația rolurilor Jellyfin")
     jellyfin_roles = None
 if jellyfin_roles:
     jellyfin_roles = list(jellyfin_roles.split(','))
@@ -131,7 +131,7 @@ else:
 try:
     jellyfin_libs = config.get(BOT_SECTION, 'jellyfin_libs')
 except:
-    print("Could not get Jellyfin libs config. Defaulting to all libraries.")
+    print("Nu s-a putut obține configurația bibliotecilor Jellyfin. Implicit pentru toate bibliotecile.")
     jellyfin_libs = None
 if jellyfin_libs is None:
     jellyfin_libs = ["all"]
@@ -143,14 +143,14 @@ try:
     USE_JELLYFIN = config.get(BOT_SECTION, 'jellyfin_enabled')
     USE_JELLYFIN = USE_JELLYFIN.lower() == "true"
 except:
-    print("Could not get Jellyfin enable config. Defaulting to False")
+    print("Nu s-a putut obține configurația de activare a Jellyfin. Implicit la Fals")
     USE_JELLYFIN = False
 
 try:
     USE_PLEX = config.get(BOT_SECTION, "plex_enabled")
     USE_PLEX = USE_PLEX.lower() == "true"
 except:
-    print("Could not get Plex enable config. Defaulting to False")
+    print("Nu s-a putut obține configurația de activare Plex. Implicit la Fals")
     USE_PLEX = False
 
 def get_config():
@@ -162,7 +162,7 @@ def get_config():
         return config
     except Exception as e:
         print(e)
-        print('error in reading config')
+        print('eroare la citirea config')
         return None
 
 
@@ -175,7 +175,7 @@ def change_config(key, value):
         config.read(CONFIG_PATH)
     except Exception as e:
         print(e)
-        print("Cannot Read config.")
+        print("Nu se poate citi configurația.")
 
     try:
         config.set(BOT_SECTION, key, str(value))
@@ -188,4 +188,4 @@ def change_config(key, value):
             config.write(configfile)
     except Exception as e:
         print(e)
-        print("Cannot write to config.")
+        print("Nu se poate scrie în config.")
